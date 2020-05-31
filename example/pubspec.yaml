@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^0.1.3
   slyverin:
     path: ../
+  google_fonts: ^1.1.0
 
 
 dev_dependencies:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'src/sliver_animated_box_example.dart';
 import 'src/sliver_sticky_header_centered_example.dart';
 
 void main() {
@@ -35,6 +36,14 @@ final examples = [
     onOpen: (context) {
       Navigator.of(context).push(MaterialPageRoute<void>(
         builder: (_) => SliverStickyHeaderCenteredExample(),
+      ));
+    },
+  ),
+  Example(
+    title: 'SliverAnimatedBox',
+    onOpen: (context) {
+      Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (_) => SliverAnimatedBoxExample(),
       ));
     },
   ),

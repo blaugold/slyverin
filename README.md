@@ -24,8 +24,20 @@ slivers above the center have to reverse their layout. Why would you need a list
 example is a list, which is able to lazily load new content from both sides. Without centering the
 scroll view, adding new content at the top suddenly shifts everything down, make the list hard to
 use, especially when content is added while scrolling. See
-[this example](./example/lib/src/sliver_sticky_header_centered_example.dart) for a list, making use
-of this feature.
+[this example](example/lib/src/sliver_sticky_header_centered_example.dart) for a list, making use of
+this feature.
+
+## `SliverAnimatedBox`
+
+A sliver which pins its child to the start of the viewport and animates it over the duration of the
+`scrollExtent`.
+
+The `scrollExtent` is total amount a user has to scroll, to move the sliver off the viewport. On the
+screen the the sliver only occupies the extent of the widget built by `builder`, which has to derive
+ist visual representation from a RenderBox. The `builder` can use the `SliverAnimatedBoxMetrics` it
+is given, to animate the returned Widget tree.
+
+[Example](example/lib/src/sliver_animated_box_example.dart)
 
 ## License
 

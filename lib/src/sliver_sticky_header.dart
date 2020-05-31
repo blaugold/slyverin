@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
+import 'render_sliver.dart';
+
 /// A sliver with sticky [header] which stays at the top of the viewport until
 /// the sliver scrolls of completely. The [header] must be a box and the [body]
 /// a sliver.
@@ -66,7 +68,8 @@ class SliverStickyHeaderParentData extends SliverPhysicalParentData
 class RenderSliverStickyHeader extends RenderSliver
     with
         RenderSliverHelpers,
-        ContainerRenderObjectMixin<RenderObject, SliverStickyHeaderParentData> {
+        ContainerRenderObjectMixin<RenderObject, SliverStickyHeaderParentData>,
+        RenderSliverChildrenWithPaintOffset {
   bool _reverse = false;
 
   bool get reverse {
@@ -131,8 +134,8 @@ class RenderSliverStickyHeader extends RenderSliver
 
     _updateGeometry();
 
-    _updateChildParentData(_header);
-    _updateChildParentData(_body);
+    setChildParentData(_header, constraints, geometry);
+    setChildParentData(_body, constraints, geometry);
   }
 
   void _performNormalLayout() {
@@ -196,39 +199,6 @@ class RenderSliverStickyHeader extends RenderSliver
     );
   }
 
-  /// This method implements a general way to compute the paint offset for
-  /// a [child], which is used to implement [_paintChild] and
-  /// [applyPaintTransform].
-  void _updateChildParentData(RenderObject child) {
-    final parentData = child.parentData as SliverStickyHeaderParentData;
-    final childExtent = _childPaintExtent(child);
-    final childMainAxisPosition = this.childMainAxisPosition(child);
-
-    switch (applyGrowthDirectionToAxisDirection(
-      constraints.axisDirection,
-      constraints.growthDirection,
-    )) {
-      case AxisDirection.up:
-        parentData.paintOffset = Offset(
-          0.0,
-          geometry.paintExtent - childMainAxisPosition - childExtent,
-        );
-        break;
-      case AxisDirection.down:
-        parentData.paintOffset = Offset(0.0, childMainAxisPosition);
-        break;
-      case AxisDirection.left:
-        parentData.paintOffset = Offset(
-          geometry.paintExtent - childMainAxisPosition - childExtent,
-          0.0,
-        );
-        break;
-      case AxisDirection.right:
-        parentData.paintOffset = Offset(childMainAxisPosition, 0.0);
-        break;
-    }
-  }
-
   @override
   void paint(PaintingContext context, Offset offset) {
     _paintChild(_body, context, offset);
@@ -248,13 +218,20 @@ class RenderSliverStickyHeader extends RenderSliver
     parentData.applyPaintTransform(transform);
   }
 
-  // ignore: missing_return
-  double _childPaintExtent(RenderObject child) {
-    if (child == _header) {
-      return _headerExtent;
-    } else if (child == _body) {
-      return _body.geometry.paintExtent;
-    }
+  @override
+  bool hitTestChildren(SliverHitTestResult result,
+      {double mainAxisPosition, double crossAxisPosition}) {
+    return hitTestBoxChild(
+          BoxHitTestResult.wrap(result),
+          _header,
+          mainAxisPosition: mainAxisPosition,
+          crossAxisPosition: crossAxisPosition,
+        ) ||
+        _body.hitTest(
+          result,
+          mainAxisPosition: mainAxisPosition - childMainAxisPosition(_body),
+          crossAxisPosition: crossAxisPosition,
+        );
   }
 
   /// The math in this method is a the heart of positioning the children.
@@ -289,6 +266,16 @@ class RenderSliverStickyHeader extends RenderSliver
 
   @override
   // ignore: missing_return
+  double childPaintExtent(RenderObject child) {
+    if (child == _header) {
+      return _headerExtent;
+    } else if (child == _body) {
+      return _body.geometry.paintExtent;
+    }
+  }
+
+  @override
+  // ignore: missing_return
   double childScrollOffset(RenderObject child) {
     // Computes the scroll offsets as if the position of the header is static.
 
@@ -305,22 +292,6 @@ class RenderSliverStickyHeader extends RenderSliver
         return overlayHeader ? 0 : _headerExtent;
       }
     }
-  }
-
-  @override
-  bool hitTestChildren(SliverHitTestResult result,
-      {double mainAxisPosition, double crossAxisPosition}) {
-    return hitTestBoxChild(
-          BoxHitTestResult.wrap(result),
-          _header,
-          mainAxisPosition: mainAxisPosition,
-          crossAxisPosition: crossAxisPosition,
-        ) ||
-        _body.hitTest(
-          result,
-          mainAxisPosition: mainAxisPosition - childMainAxisPosition(_body),
-          crossAxisPosition: crossAxisPosition,
-        );
   }
 }
 
