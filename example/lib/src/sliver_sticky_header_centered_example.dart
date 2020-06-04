@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:slyverin/slyverin.dart';
 
+import 'fixtures.dart';
+
 class SliverStickyHeaderCenteredExample extends StatefulWidget {
   SliverStickyHeaderCenteredExample({Key key}) : super(key: key);
 
@@ -11,52 +13,41 @@ class SliverStickyHeaderCenteredExample extends StatefulWidget {
       _SliverStickyHeaderCenteredExampleState();
 }
 
-class ImageItem {
-  ImageItem({
-    @required this.asset,
-    @required this.title,
-  });
-
-  final String asset;
-  final String title;
-}
-
 class _SliverStickyHeaderCenteredExampleState
     extends State<SliverStickyHeaderCenteredExample> {
   final _center = GlobalKey();
 
-  final _images = [
-    ImageItem(asset: 'images/img_0.jpg', title: 'Paint'),
-    ImageItem(asset: 'images/img_1.jpg', title: 'Bubbles'),
-    ImageItem(asset: 'images/img_2.jpg', title: 'Forrest'),
-    ImageItem(asset: 'images/img_3.jpg', title: 'Church'),
-    ImageItem(asset: 'images/img_4.jpg', title: 'Beach'),
-    ImageItem(asset: 'images/img_5.jpg', title: 'Cliffs'),
-    ImageItem(asset: 'images/img_6.jpg', title: 'Rollerblades'),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    final firstHalfImages = _images.sublist(0, _images.length ~/ 2);
-    final secondHalfImages = _images.sublist(firstHalfImages.length);
+    return FutureBuilder<List<ImageAsset>>(
+      future: loadImages(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData)
+          return Center(child: CircularProgressIndicator());
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('SliverStickyHeader: Centered'),
-      ),
-      body: CustomScrollView(
-        center: _center,
-        slivers: [
-          for (final img in firstHalfImages)
-            _buildImageItem(img, reverse: true),
-          _buildCenter(),
-          for (final img in secondHalfImages) _buildImageItem(img),
-        ],
-      ),
+        final images = snapshot.data;
+        final firstHalfImages = images.sublist(0, images.length ~/ 2);
+        final secondHalfImages = images.sublist(firstHalfImages.length);
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('SliverStickyHeader: Centered'),
+          ),
+          body: CustomScrollView(
+            center: _center,
+            slivers: [
+              for (final img in firstHalfImages)
+                _buildImageItem(img, reverse: true),
+              _buildCenter(),
+              for (final img in secondHalfImages) _buildImageItem(img),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  SliverStickyHeader _buildImageItem(ImageItem img, {bool reverse = false}) {
+  SliverStickyHeader _buildImageItem(ImageAsset img, {bool reverse = false}) {
     return SliverStickyHeader(
       reverse: reverse,
       overlayHeader: true,
@@ -79,7 +70,7 @@ class _SliverStickyHeaderCenteredExampleState
         ),
       ),
       body: SliverToBoxAdapter(
-        child: Image.asset(img.asset),
+        child: Image.asset(img.asset, fit: BoxFit.cover),
       ),
     );
   }
