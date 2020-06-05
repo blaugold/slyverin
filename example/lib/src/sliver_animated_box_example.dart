@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:example/src/curves.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:slyverin/slyverin.dart';
 
+import 'curves.dart';
 import 'fixtures.dart';
 
 class SliverAnimatedBoxExample extends StatefulWidget {
@@ -168,33 +168,54 @@ class _SliverAnimatedBoxExampleState extends State<SliverAnimatedBoxExample> {
       scrollExtent: 5000,
       builder: (context, metrics) {
         final height = 500.0;
+
         return Container(
           height: height,
-          child: AnimatedViewport(
+          child: _AnimatedViewport(
             axisDirection: AxisDirection.right,
             animationProgress: metrics.animationProgress,
             curve: PreciseCubic.fromCubic(Curves.easeInOut),
             cacheExtent: 500,
             slivers: images.map((imageAsset) {
               final image = imageAsset.image;
+
               return SliverToBoxAdapter(
                 child: Container(
-                  height: height,
-                  width: height * (image.width / image.height),
                   padding: const EdgeInsets.symmetric(
                     vertical: 30,
                     horizontal: 15,
                   ),
-                  child: Card(
-                    elevation: 6,
-                    clipBehavior: Clip.antiAlias,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: RawImage(
-                      image: image,
-                      fit: BoxFit.cover,
-                    ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Card(
+                          elevation: 2,
+                          clipBehavior: Clip.antiAlias,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: AspectRatio(
+                            aspectRatio: image.width / image.height,
+                            child: RawImage(
+                              image: image,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 16),
+                        child: Text(
+                          imageAsset.title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -206,14 +227,17 @@ class _SliverAnimatedBoxExampleState extends State<SliverAnimatedBoxExample> {
   }
 }
 
-class AnimatedViewport extends StatefulWidget {
+/// A viewport whose scroll offset is driven by [animationProgress], which is a
+/// value between `0` and `1`. At `0` the viewport is at scroll offset `0`
+/// and at `1` the viewport is at `maxScrollOffset`.
+class _AnimatedViewport extends StatefulWidget {
   final List<Widget> slivers;
   final double animationProgress;
   final AxisDirection axisDirection;
   final Curve curve;
   final double cacheExtent;
 
-  const AnimatedViewport({
+  const _AnimatedViewport({
     Key key,
     this.slivers,
     this.animationProgress,
@@ -227,7 +251,7 @@ class AnimatedViewport extends StatefulWidget {
   _AnimatedViewportState createState() => _AnimatedViewportState();
 }
 
-class _AnimatedViewportState extends State<AnimatedViewport> {
+class _AnimatedViewportState extends State<_AnimatedViewport> {
   final _offset = _AnimatedViewportOffset();
 
   @override
@@ -237,7 +261,7 @@ class _AnimatedViewportState extends State<AnimatedViewport> {
   }
 
   @override
-  void didUpdateWidget(AnimatedViewport oldWidget) {
+  void didUpdateWidget(_AnimatedViewport oldWidget) {
     super.didUpdateWidget(oldWidget);
     _offset.animationProgress = widget.animationProgress;
     _offset.curve = widget.curve;
