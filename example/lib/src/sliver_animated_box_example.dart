@@ -39,6 +39,7 @@ class _SliverAnimatedBoxExampleState extends State<SliverAnimatedBoxExample> {
           body: Scrollbar(
             child: CustomScrollView(
               slivers: [
+                _buildPathTangentVisualization(),
                 _buildSpacer(),
                 _buildClockSliver(),
                 _buildSpacer(),
@@ -225,6 +226,93 @@ class _SliverAnimatedBoxExampleState extends State<SliverAnimatedBoxExample> {
       },
     );
   }
+
+  Widget _buildPathTangentVisualization() {
+    return SliverAnimatedBox(
+        scrollExtent: 5000,
+        builder: (context, metrics) {
+          return AspectRatio(
+            aspectRatio: 1,
+            child: Container(
+              padding: EdgeInsets.all(50),
+              child: CustomPaint(
+                painter: PathTangentPainter(
+                  animation: metrics.animationProgress * 2,
+                ),
+              ),
+            ),
+          );
+        });
+  }
+}
+
+class PathTangentPainter extends CustomPainter {
+  final double animation;
+
+  PathTangentPainter({this.animation}) : assert(animation != null);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path();
+    path.moveTo(0, 0);
+    path.cubicTo(0, 0, 1, -1, 2, -1);
+    path.cubicTo(3, -1, 3, -.1, 3, 0);
+    path.cubicTo(3, .1, 3, 1, 2, 1);
+    path.cubicTo(1, 1, 0, 0, 0, 0);
+    path.cubicTo(0, 0, -1, -1, -2, -1);
+    path.cubicTo(-3, -1, -3, -.1, -3, 0);
+    path.cubicTo(-3, .1, -3, 1, -2, 1);
+    path.cubicTo(-1, 1, 0, 0, 0, 0);
+
+    final pathMetric = path.computeMetrics().first;
+
+    final pathSize = Size.square(6);
+    final scale = max(
+      size.width / pathSize.width,
+      size.height / pathSize.height,
+    );
+
+    canvas.translate(size.width / 2, size.height / 2);
+    canvas.scale(scale);
+
+    final tangent = pathMetric.getTangentForOffset(
+      (pathMetric.length * animation) % pathMetric.length,
+    );
+    final subPath = pathMetric.extractPath(
+      0,
+      min(
+        pathMetric.length,
+        animation * pathMetric.length,
+      ),
+    );
+    canvas.drawPath(
+      subPath,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1 / scale,
+    );
+
+    canvas.drawLine(
+      tangent.position - tangent.vector,
+      tangent.position + tangent.vector,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = Colors.orange.withOpacity(.5)
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = (1 / scale) * 4,
+    );
+
+    canvas.drawCircle(
+      tangent.position,
+      (1 / scale) * 6,
+      Paint()
+        ..style = PaintingStyle.fill
+        ..color = Colors.red.withOpacity(.5),
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
 /// A viewport whose scroll offset is driven by [animationProgress], which is a
