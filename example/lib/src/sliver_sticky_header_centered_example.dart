@@ -70,7 +70,10 @@ class _SliverStickyHeaderCenteredExampleState
         ),
       ),
       body: SliverToBoxAdapter(
-        child: Image.asset(img.asset, fit: BoxFit.cover),
+        child: RawImage(
+          image: img.image,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
