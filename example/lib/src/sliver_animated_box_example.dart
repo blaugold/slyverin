@@ -437,4 +437,7 @@ class _AnimatedViewportOffset extends ViewportOffset {
   void jumpTo(double pixels) {
     throw UnimplementedError();
   }
+
+  @override
+  bool get hasPixels => pixels != null;
 }
