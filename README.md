@@ -1,3 +1,5 @@
+![pub package](https://img.shields.io/pub/v/slyverin.svg)
+
 # slyverin
 
 A library of flutter sliver implementations.
