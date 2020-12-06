@@ -1,4 +1,4 @@
-![pub package](https://img.shields.io/pub/v/slyverin.svg)
+[![pub package](https://img.shields.io/pub/v/slyverin.svg)](https://pub.dev/packages/slyverin)
 
 # slyverin
 
