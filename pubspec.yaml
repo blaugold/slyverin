@@ -1,7 +1,6 @@
 name: slyverin
 description: A library of flutter sliver implementations.
 version: 0.1.0
-author: Gabriel Terwesten
 homepage: https://github.com/blaugold/slyverin
 repository: https://github.com/blaugold/slyverin
 issue_tracker: https://github.com/blaugold/slyverin/issues
