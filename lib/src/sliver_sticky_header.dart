@@ -10,16 +10,12 @@ import 'render_sliver.dart';
 /// a sliver.
 class SliverStickyHeader extends MultiChildRenderObjectWidget {
   SliverStickyHeader({
-    Key key,
+    Key? key,
     this.reverse = false,
     this.overlayHeader = false,
-    this.header,
-    this.body,
-  })  : assert(reverse != null),
-        assert(overlayHeader != null),
-        assert(header != null),
-        assert(body != null),
-        super(key: key, children: [header, body]);
+    required this.header,
+    required this.body,
+  }) : super(key: key, children: [header, body]);
 
   /// Setting [reverse] to `true` places [header] at the opposite end of the
   /// sliver than normal. This is most useful when a [SliverStickyHeader] is
@@ -113,10 +109,10 @@ class RenderSliverStickyHeader extends RenderSliver
   }
 
   /// Scroll extent of the [header].
-  double _headerExtent;
+  late double _headerExtent;
 
   /// Scroll extent of the [body].
-  double _bodyExtent;
+  late double _bodyExtent;
 
   @override
   void setupParentData(RenderObject child) {
@@ -134,8 +130,8 @@ class RenderSliverStickyHeader extends RenderSliver
 
     _updateGeometry();
 
-    setChildParentData(_header, constraints, geometry);
-    setChildParentData(_body, constraints, geometry);
+    setChildParentData(_header, constraints, geometry!);
+    setChildParentData(_body, constraints, geometry!);
   }
 
   void _performNormalLayout() {
@@ -151,12 +147,12 @@ class RenderSliverStickyHeader extends RenderSliver
             ),
       parentUsesSize: true,
     );
-    _bodyExtent = _body.geometry.scrollExtent;
+    _bodyExtent = _body.geometry!.scrollExtent;
   }
 
   void _performReversedLayout() {
     _body.layout(constraints, parentUsesSize: true);
-    _bodyExtent = _body.geometry.scrollExtent;
+    _bodyExtent = _body.geometry!.scrollExtent;
 
     _header.layout(
       // We could use the body geometry to derive more accurate
@@ -206,7 +202,7 @@ class RenderSliverStickyHeader extends RenderSliver
   }
 
   void _paintChild(RenderObject child, PaintingContext context, Offset offset) {
-    if (geometry.visible) {
+    if (geometry!.visible) {
       final parentData = child.parentData as SliverStickyHeaderParentData;
       context.paintChild(child, offset + parentData.paintOffset);
     }
@@ -220,7 +216,7 @@ class RenderSliverStickyHeader extends RenderSliver
 
   @override
   bool hitTestChildren(SliverHitTestResult result,
-      {double mainAxisPosition, double crossAxisPosition}) {
+      {required double mainAxisPosition, required double crossAxisPosition}) {
     return hitTestBoxChild(
           BoxHitTestResult.wrap(result),
           _header,
@@ -262,6 +258,12 @@ class RenderSliverStickyHeader extends RenderSliver
             : max(0, _headerExtent - constraints.scrollOffset);
       }
     }
+
+    throw ArgumentError.value(
+      child,
+      'child',
+      'must be either _header or _body',
+    );
   }
 
   @override
@@ -270,12 +272,17 @@ class RenderSliverStickyHeader extends RenderSliver
     if (child == _header) {
       return _headerExtent;
     } else if (child == _body) {
-      return _body.geometry.paintExtent;
+      return _body.geometry!.paintExtent;
     }
+
+    throw ArgumentError.value(
+      child,
+      'child',
+      'must be either _header or _body',
+    );
   }
 
   @override
-  // ignore: missing_return
   double childScrollOffset(RenderObject child) {
     // Computes the scroll offsets as if the position of the header is static.
 
@@ -298,8 +305,8 @@ class RenderSliverStickyHeader extends RenderSliver
 /// Adjusts [constraints] to layout a sliver behind a box, which has a size of
 /// [extent] in the main axis.
 SliverConstraints _adjustConstraintsForLeadingBox({
-  @required SliverConstraints constraints,
-  @required double extent,
+  required SliverConstraints constraints,
+  required double extent,
 }) {
   final scrollOffset = max(0.0, constraints.scrollOffset - extent);
   final nonCacheExtent = constraints.scrollOffset + constraints.cacheOrigin;

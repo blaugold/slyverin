@@ -45,7 +45,7 @@ class _SliverAnimatedBoxExampleState extends State<SliverAnimatedBoxExample> {
                 _buildSpacer(),
                 _buildCounterSliver(),
                 _buildSpacer(),
-                _buildPhotoSlideSliver(snapshot.data),
+                _buildPhotoSlideSliver(snapshot.data!),
                 _buildSpacer(),
               ],
             ),
@@ -139,7 +139,7 @@ class _SliverAnimatedBoxExampleState extends State<SliverAnimatedBoxExample> {
               height: 300,
               color: Colors.indigo,
               alignment: Alignment.center,
-              child: FlatButton(
+              child: TextButton(
                 child: Text(
                   'Clicks: $_clicks',
                   style: TextStyle(color: Colors.white),
@@ -178,7 +178,7 @@ class _SliverAnimatedBoxExampleState extends State<SliverAnimatedBoxExample> {
             curve: PreciseCubic.fromCubic(Curves.easeInOut),
             cacheExtent: 500,
             slivers: images.map((imageAsset) {
-              final image = imageAsset.image;
+              final image = imageAsset.image!;
 
               return SliverToBoxAdapter(
                 child: Container(
@@ -249,7 +249,7 @@ class _SliverAnimatedBoxExampleState extends State<SliverAnimatedBoxExample> {
 class PathTangentPainter extends CustomPainter {
   final double animation;
 
-  PathTangentPainter({this.animation}) : assert(animation != null);
+  PathTangentPainter({required this.animation});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -277,7 +277,7 @@ class PathTangentPainter extends CustomPainter {
 
     final tangent = pathMetric.getTangentForOffset(
       (pathMetric.length * animation) % pathMetric.length,
-    );
+    )!;
     final subPath = pathMetric.extractPath(
       0,
       min(
@@ -326,14 +326,13 @@ class _AnimatedViewport extends StatefulWidget {
   final double cacheExtent;
 
   const _AnimatedViewport({
-    Key key,
-    this.slivers,
-    this.animationProgress,
-    this.axisDirection,
+    Key? key,
+    required this.slivers,
+    required this.animationProgress,
+    required this.axisDirection,
     this.curve = Curves.linear,
-    this.cacheExtent,
-  })  : assert(curve != null),
-        super(key: key);
+    required this.cacheExtent,
+  }) : super(key: key);
 
   @override
   _AnimatedViewportState createState() => _AnimatedViewportState();
@@ -386,7 +385,6 @@ class _AnimatedViewportOffset extends ViewportOffset {
   Curve get curve => _curve;
 
   void set curve(Curve curve) {
-    assert(curve != null);
     _curve = curve;
   }
 
@@ -429,7 +427,7 @@ class _AnimatedViewportOffset extends ViewportOffset {
   }
 
   @override
-  Future<void> animateTo(double to, {Duration duration, Curve curve}) {
+  Future<void> animateTo(double to, {Duration? duration, Curve? curve}) {
     throw UnimplementedError();
   }
 
@@ -439,5 +437,5 @@ class _AnimatedViewportOffset extends ViewportOffset {
   }
 
   @override
-  bool get hasPixels => pixels != null;
+  bool get hasPixels => true;
 }

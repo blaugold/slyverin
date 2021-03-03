@@ -11,10 +11,9 @@ abstract class BuilderDataLayoutBuilder<BuilderData>
   /// The [builder] argument must not be null, and the returned widget should not
   /// be null.
   const BuilderDataLayoutBuilder({
-    Key key,
-    @required this.builder,
-  })  : assert(builder != null),
-        super(key: key);
+    Key? key,
+    required this.builder,
+  }) : super(key: key);
 
   @override
   _LayoutBuilderElement<BuilderData> createElement() =>
@@ -41,11 +40,11 @@ class _LayoutBuilderElement<BuilderData> extends RenderObjectElement {
       super.renderObject
           as RenderBuilderDataLayoutBuilder<BuilderData, RenderObject>;
 
-  Element _child;
+  Element? _child;
 
   @override
   void visitChildren(ElementVisitor visitor) {
-    if (_child != null) visitor(_child);
+    if (_child != null) visitor(_child!);
   }
 
   @override
@@ -56,7 +55,7 @@ class _LayoutBuilderElement<BuilderData> extends RenderObjectElement {
   }
 
   @override
-  void mount(Element parent, dynamic newSlot) {
+  void mount(Element? parent, dynamic newSlot) {
     super.mount(parent, newSlot); // Creates the renderObject.
     renderObject.updateCallback(_layout);
   }
@@ -93,25 +92,24 @@ class _LayoutBuilderElement<BuilderData> extends RenderObjectElement {
   }
 
   void _layout(BuilderData builderData) {
-    owner.buildScope(this, () {
+    owner!.buildScope(this, () {
       Widget built;
-      if (widget.builder != null) {
-        try {
-          built = widget.builder(this, builderData);
-          debugWidgetBuilderValue(widget, built);
-        } catch (e, stack) {
-          built = ErrorWidget.builder(
-            _debugReportException(
-              ErrorDescription('building $widget'),
-              e,
-              stack,
-              informationCollector: () sync* {
-                yield DiagnosticsDebugCreator(DebugCreator(this));
-              },
-            ),
-          );
-        }
+      try {
+        built = widget.builder(this, builderData);
+        debugWidgetBuilderValue(widget, built);
+      } catch (e, stack) {
+        built = ErrorWidget.builder(
+          _debugReportException(
+            ErrorDescription('building $widget'),
+            e,
+            stack,
+            informationCollector: () sync* {
+              yield DiagnosticsDebugCreator(DebugCreator(this));
+            },
+          ),
+        );
       }
+
       try {
         _child = updateChild(_child, built, null);
         assert(_child != null);
@@ -132,7 +130,7 @@ class _LayoutBuilderElement<BuilderData> extends RenderObjectElement {
   }
 
   @override
-  void insertChildRenderObject(RenderObject child, dynamic slot) {
+  void insertRenderObjectChild(RenderObject child, dynamic slot) {
     final RenderObjectWithChildMixin<RenderObject> renderObject =
         this.renderObject;
     assert(slot == null);
@@ -142,12 +140,16 @@ class _LayoutBuilderElement<BuilderData> extends RenderObjectElement {
   }
 
   @override
-  void moveChildRenderObject(RenderObject child, dynamic slot) {
+  void moveRenderObjectChild(
+    RenderObject child,
+    dynamic oldSlot,
+    dynamic newSlow,
+  ) {
     assert(false);
   }
 
   @override
-  void removeChildRenderObject(RenderObject child) {
+  void removeRenderObjectChild(RenderObject child, dynamic slot) {
     final RenderBuilderDataLayoutBuilder<BuilderData, RenderObject>
         renderObject = this.renderObject;
     assert(renderObject.child == child);
@@ -166,12 +168,12 @@ mixin RenderBuilderDataLayoutBuilder<BuilderData,
     ChildType extends RenderObject> on RenderObjectWithChildMixin<ChildType> {
   /// The data to pass to [BuilderDataLayoutBuilder.builder]. This needs to
   /// be updated before calls to [rebuildIfNecessary].
-  BuilderData builderData;
+  BuilderData? builderData;
 
-  BuilderDataLayoutCallback<BuilderData> _callback;
+  BuilderDataLayoutCallback<BuilderData>? _callback;
 
   /// Change the layout callback.
-  void updateCallback(BuilderDataLayoutCallback<BuilderData> value) {
+  void updateCallback(BuilderDataLayoutCallback<BuilderData>? value) {
     if (value == _callback) return;
     _callback = value;
     markNeedsLayout();
@@ -200,7 +202,7 @@ mixin RenderBuilderDataLayoutBuilder<BuilderData,
   // The builder data that was passed to this class last time it was laid out.
   // These constraints are compared to the new builder data to determine whether
   // [ConstrainedLayoutBuilder.builder] needs to be called.
-  BuilderData _previousBuilderData;
+  BuilderData? _previousBuilderData;
 
   /// Invoke the callback supplied via [updateCallback].
   ///
@@ -212,7 +214,7 @@ mixin RenderBuilderDataLayoutBuilder<BuilderData,
       _previousBuilderData = builderData;
       _needsBuild = false;
       invokeLayoutCallback((dynamic _) {
-        _callback(builderData);
+        _callback!(builderData!);
       });
     }
   }
@@ -226,9 +228,9 @@ mixin RenderBuilderDataLayoutBuilder<BuilderData,
 
 FlutterErrorDetails _debugReportException(
   DiagnosticsNode context,
-  dynamic exception,
+  Object exception,
   StackTrace stack, {
-  InformationCollector informationCollector,
+  InformationCollector? informationCollector,
 }) {
   final FlutterErrorDetails details = FlutterErrorDetails(
     exception: exception,

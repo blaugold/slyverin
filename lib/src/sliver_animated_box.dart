@@ -18,9 +18,9 @@ typedef Widget SliverAnimatedBoxWidgetBuilder(
 class SliverAnimatedBoxMetrics {
   /// Creates the metrics for a [SliverAnimatedBoxWidgetBuilder].
   SliverAnimatedBoxMetrics({
-    @required this.scrollExtent,
-    @required this.scrollOffset,
-    @required this.viewportExtent,
+    required this.scrollExtent,
+    required this.scrollOffset,
+    required this.viewportExtent,
     this.previousBoxExtent,
   })  : assert(scrollExtent > 0),
         assert(scrollOffset >= 0),
@@ -43,7 +43,7 @@ class SliverAnimatedBoxMetrics {
   /// axis.
   ///
   /// Is `null` during the first layout.
-  final double previousBoxExtent;
+  final double? previousBoxExtent;
 
   /// The percentage of scrolling the user has done to complete the animation.
   ///
@@ -56,7 +56,7 @@ class SliverAnimatedBoxMetrics {
   /// response to scrolling.
   double get animationProgress => previousBoxExtent == null
       ? 0
-      : min(1, scrollOffset / (scrollExtent - previousBoxExtent));
+      : min(1, scrollOffset / (scrollExtent - previousBoxExtent!));
 
   /// The percentage of scrolling the user has done to scroll the animated box
   /// off the viewport.
@@ -100,11 +100,10 @@ class SliverAnimatedBoxMetrics {
 class SliverAnimatedBox
     extends BuilderDataLayoutBuilder<SliverAnimatedBoxMetrics> {
   const SliverAnimatedBox({
-    Key key,
-    @required this.scrollExtent,
-    @required SliverAnimatedBoxWidgetBuilder builder,
-  })  : assert(builder != null),
-        super(key: key, builder: builder);
+    Key? key,
+    required this.scrollExtent,
+    required SliverAnimatedBoxWidgetBuilder builder,
+  }) : super(key: key, builder: builder);
 
   /// The scroll extent this sliver occupies along the scroll axis. A higher
   /// number means the user has to scroll longer before the animation is
@@ -133,7 +132,7 @@ class RenderSliverAnimatedBox extends RenderSliverSingleBoxAdapter
         RenderBuilderDataLayoutBuilder<SliverAnimatedBoxMetrics, RenderBox>,
         RenderSliverChildrenWithPaintOffset {
   RenderSliverAnimatedBox({
-    @required double scrollExtent,
+    required double scrollExtent,
   }) : _scrollExtent = scrollExtent;
 
   double _scrollExtent;
@@ -149,8 +148,8 @@ class RenderSliverAnimatedBox extends RenderSliverSingleBoxAdapter
     }
   }
 
-  double _boxExtent;
-  double _freeScrollExtent;
+  double? _boxExtent;
+  late double _freeScrollExtent;
 
   @override
   void performLayout() {
@@ -159,7 +158,7 @@ class RenderSliverAnimatedBox extends RenderSliverSingleBoxAdapter
     _layoutChild();
 
     final from = min(scrollExtent, constraints.scrollOffset);
-    final to = min(scrollExtent, constraints.scrollOffset + _boxExtent);
+    final to = min(scrollExtent, constraints.scrollOffset + _boxExtent!);
     final paintExtent = calculatePaintOffset(
       constraints,
       from: from,
@@ -171,7 +170,7 @@ class RenderSliverAnimatedBox extends RenderSliverSingleBoxAdapter
       to: to,
     );
 
-    _freeScrollExtent = scrollExtent - _boxExtent;
+    _freeScrollExtent = scrollExtent - _boxExtent!;
 
     final trailingScrollExtent =
         max(0, _freeScrollExtent - constraints.scrollOffset);
@@ -179,13 +178,13 @@ class RenderSliverAnimatedBox extends RenderSliverSingleBoxAdapter
     geometry = SliverGeometry(
       scrollExtent: scrollExtent,
       paintExtent: paintExtent,
-      maxPaintExtent: _boxExtent,
+      maxPaintExtent: _boxExtent!,
       cacheExtent: cacheExtent,
-      hasVisualOverflow: _boxExtent > constraints.remainingPaintExtent ||
+      hasVisualOverflow: _boxExtent! > constraints.remainingPaintExtent ||
           trailingScrollExtent == 0.0,
     );
 
-    setChildParentData(child, constraints, geometry);
+    setChildParentData(child!, constraints, geometry!);
   }
 
   @override
@@ -195,7 +194,7 @@ class RenderSliverAnimatedBox extends RenderSliverSingleBoxAdapter
 
   @override
   double childPaintExtent(RenderObject child) {
-    return _boxExtent;
+    return _boxExtent!;
   }
 
   @override
@@ -213,7 +212,7 @@ class RenderSliverAnimatedBox extends RenderSliverSingleBoxAdapter
   }
 
   void _layoutChild() {
-    child.layout(
+    child!.layout(
       constraints.asBoxConstraints(maxExtent: scrollExtent),
       parentUsesSize: true,
     );
@@ -223,10 +222,10 @@ class RenderSliverAnimatedBox extends RenderSliverSingleBoxAdapter
   void _updateChildExtent() {
     switch (constraints.axis) {
       case Axis.horizontal:
-        _boxExtent = child.size.width;
+        _boxExtent = child!.size.width;
         break;
       case Axis.vertical:
-        _boxExtent = child.size.height;
+        _boxExtent = child!.size.height;
         break;
     }
   }

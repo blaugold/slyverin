@@ -12,8 +12,6 @@ abstract class RenderSliverChildrenWithPaintOffset {
   ) {
     final SliverPhysicalParentData childParentData =
         child.parentData as SliverPhysicalParentData;
-    assert(constraints.axisDirection != null);
-    assert(constraints.growthDirection != null);
     switch (applyGrowthDirectionToAxisDirection(
       constraints.axisDirection,
       constraints.growthDirection,
@@ -41,6 +39,5 @@ abstract class RenderSliverChildrenWithPaintOffset {
         );
         break;
     }
-    assert(childParentData.paintOffset != null);
   }
 }

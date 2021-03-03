@@ -25,8 +25,8 @@ class Example {
   final OnOpenExample onOpen;
 
   Example({
-    this.title,
-    this.onOpen,
+    required this.title,
+    required this.onOpen,
   });
 }
 
@@ -65,7 +65,7 @@ class Home extends StatelessWidget {
           children: examples
               .map((e) => Container(
                     padding: EdgeInsets.all(16),
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       child: Text(e.title),
                       onPressed: () {
                         e.onOpen(context);

@@ -5,12 +5,16 @@ import 'package:flutter/widgets.dart';
 /// the curve.
 class PreciseCubic extends Cubic {
   /// Creates a precise cubic curve.
-  const PreciseCubic(double a, double b, double c, double d,
-      {double errorBound})
-      : errorBound = errorBound ?? 0.00000001,
+  const PreciseCubic(
+    double a,
+    double b,
+    double c,
+    double d, {
+    double? errorBound,
+  })  : errorBound = errorBound ?? 0.00000001,
         super(a, b, c, d);
 
-  factory PreciseCubic.fromCubic(Cubic cubic, {double errorBound}) =>
+  factory PreciseCubic.fromCubic(Cubic cubic, {double? errorBound}) =>
       PreciseCubic(
         cubic.a,
         cubic.b,

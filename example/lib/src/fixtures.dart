@@ -1,19 +1,17 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 class ImageAsset {
   ImageAsset({
-    @required this.asset,
-    @required this.title,
+    required this.asset,
+    required this.title,
   });
 
   final String asset;
   final String title;
-  ui.Image image;
+  ui.Image? image;
 
   Future<void> _load() async {
     final data = await rootBundle.load(asset);
@@ -23,7 +21,7 @@ class ImageAsset {
   }
 }
 
-Future<void> _loadImagesFuture;
+Future<void>? _loadImagesFuture;
 
 final _images = [
   ImageAsset(asset: 'images/img_0.jpg', title: 'Paint'),

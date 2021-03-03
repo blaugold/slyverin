@@ -18,7 +18,7 @@ void main() {
                 return Container(
                   height: 500,
                   color: Colors.orange,
-                  child: FlatButton(
+                  child: TextButton(
                     child: Text('Button'),
                     onPressed: () {
                       buttonWasClicked = true;

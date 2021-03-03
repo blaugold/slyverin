@@ -6,7 +6,7 @@ import 'package:slyverin/slyverin.dart';
 import 'fixtures.dart';
 
 class SliverStickyHeaderCenteredExample extends StatefulWidget {
-  SliverStickyHeaderCenteredExample({Key key}) : super(key: key);
+  SliverStickyHeaderCenteredExample({Key? key}) : super(key: key);
 
   @override
   _SliverStickyHeaderCenteredExampleState createState() =>
@@ -25,7 +25,7 @@ class _SliverStickyHeaderCenteredExampleState
         if (!snapshot.hasData)
           return Center(child: CircularProgressIndicator());
 
-        final images = snapshot.data;
+        final images = snapshot.data!;
         final firstHalfImages = images.sublist(0, images.length ~/ 2);
         final secondHalfImages = images.sublist(firstHalfImages.length);
 
