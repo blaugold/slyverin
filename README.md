@@ -4,7 +4,7 @@
 
 A library of flutter sliver implementations.
 
-[Live Demo](https://blaugold.github.io/slyverin/example_dist)
+[Live Demo](https://blaugold.github.io/slyverin/example_dist/index.html)
 
 ## `SliverStickyHeader`
 
