@@ -1,3 +1,7 @@
-## [0.1.0] - 2020-12-06.
+## [0.2.0] - 2021-03-03
 
-* Initial release.
+- **FEAT** migrate to nullsafety
+
+## [0.1.0] - 2020-12-06
+
+- Initial release.
