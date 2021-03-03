@@ -1,6 +1,11 @@
+## [0.2.0+2] - 2021-03-03
+
+- revert to sdk constraint `>=2.12.0-0 <3.0.0`
+
 ## [0.2.0+1] - 2021-03-03
 
 - **DOCS** fix live demo link
+
 ## [0.2.0] - 2021-03-03
 
 - **FEAT** migrate to nullsafety
