@@ -1,10 +1,14 @@
+## [0.2.0+4] - 2021-07-05
+
+- docs: fix link of gif in README
+
 ## [0.2.0+3] - 2021-07-05
 
 - docs: improve README
 - chore: update example live demo
 - deps: use stable release version of dart sdk
 
-## [0.2.0+2] - 2021-03-03
+## [0.2.0+2] -2021-03-03
 
 - revert to sdk constraint `>=2.12.0-0 <3.0.0`
 

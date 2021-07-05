@@ -2,7 +2,7 @@ name: slyverin
 description: >-
   A library of flutter sliver implementations, including for sticky
   headers and scroll position based animation.
-version: 0.2.0+3
+version: 0.2.0+4
 homepage: https://github.com/blaugold/slyverin
 repository: https://github.com/blaugold/slyverin
 issue_tracker: https://github.com/blaugold/slyverin/issues
