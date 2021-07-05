@@ -1,8 +1,6 @@
 [![pub.dev](https://badgen.net/pub/v/slyverin)](https://pub.dev/packages/slyverin)
 [![LICENSE](https://badgen.net/pub/license/slyverin)](./LICENSE)
 
-# slyverin
-
 A library of Flutter sliver implementations.
 
 [Live Demo](https://blaugold.github.io/slyverin/example_dist/index.html)
@@ -10,7 +8,7 @@ A library of Flutter sliver implementations.
 ## `SliverStickyHeader`
 
 <p align="center">
-    <img width="400" src="./docs/sliver_sticky_header_centered.gif">
+    <img width="400" src="https://github.com/blaugold/slyverin/blob/master/docs/sliver_sticky_header_centered.gif?raw=true">
 </p>
 
 This sliver accepts two widgets: a header and a body. The header stays pinned to the top of the viewport, until the bottom edge of the overall sliver scrolls out.
