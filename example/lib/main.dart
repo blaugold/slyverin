@@ -1,3 +1,4 @@
+import 'package:explo_capture/explo_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'src/sliver_animated_box_example.dart';
@@ -11,9 +12,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Home(),
+    return CaptureRenderTree(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Home(),
+      ),
     );
   }
 }
@@ -35,7 +38,9 @@ final examples = [
     title: 'SliverStickyHeader: Centered',
     onOpen: (context) {
       Navigator.of(context).push(MaterialPageRoute<void>(
-        builder: (_) => SliverStickyHeaderCenteredExample(),
+        builder: (_) => CaptureRenderTree(
+          child: SliverStickyHeaderCenteredExample(),
+        ),
       ));
     },
   ),
@@ -43,7 +48,9 @@ final examples = [
     title: 'SliverAnimatedBox',
     onOpen: (context) {
       Navigator.of(context).push(MaterialPageRoute<void>(
-        builder: (_) => SliverAnimatedBoxExample(),
+        builder: (_) => CaptureRenderTree(
+          child: SliverAnimatedBoxExample(),
+        ),
       ));
     },
   ),

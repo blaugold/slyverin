@@ -13,6 +13,7 @@ dependencies:
   slyverin:
     path: ../
   google_fonts: ^2.0.0
+  explo_capture: ^0.1.0+2
 
 dev_dependencies:
   flutter_test:
