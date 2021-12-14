@@ -14,4 +14,4 @@ flutter build web --pwa-strategy none
 
 rm -rf "$EXAMPLE_LIVE_DEMO_DIR"
 mkdir -p "$EXAMPLE_LIVE_DEMO_DIR"
-cp -R "$EXAMPLE_BUILD_DIR/" "$EXAMPLE_LIVE_DEMO_DIR"
+cp -a "$EXAMPLE_BUILD_DIR/"* "$EXAMPLE_LIVE_DEMO_DIR"
