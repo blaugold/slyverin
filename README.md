@@ -8,7 +8,7 @@ A library of Flutter sliver implementations.
 ## `SliverStickyHeader`
 
 <p align="center">
-    <img width="400" src="https://github.com/blaugold/slyverin/blob/master/docs/sliver_sticky_header_centered.gif?raw=true">
+    <img width="400" src="https://github.com/blaugold/slyverin/blob/main/docs/sliver_sticky_header_centered.gif?raw=true">
 </p>
 
 This sliver accepts two widgets: a header and a body. The header stays pinned to the top of the viewport, until the bottom edge of the overall sliver scrolls out.
